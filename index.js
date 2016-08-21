@@ -18,6 +18,9 @@ const version = (opts) => {
   const errCons = opts.errorConstructor || Error;
   const getVersion = opts.getVersion || checkHeader(opts.header || 'accept-version');
 
+  // Most likely the module was required but not initialzed - so when it's used as a middleware it's not actually a middleware. Throw immediatley to prevent runtime errors.
+  if (typeof opts === 'string') { throw new Error('express-semver-routing expects config parameter to be an object, string provided. Make sure you are calling the module as a function before using it as a middleware. Ex: const version = require("express-semver-routing")()'); }
+
   // Ambiguous fields set - throw since it's a programmer error
   if (opts.getVersion && opts.header) { throw new Error('Ambiguous arguments provided to express-semver-routing module. Cannot set both "getVersion" and "header" fields.'); }
 
